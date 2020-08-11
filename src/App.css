@@ -1,12 +1,44 @@
+
+
 a {
   text-align: center;
   display:block;
 }
 
+.body {
+  background-image: url("main_page_background.jpg");
+  color: white
+}
+
 .header {
   padding: 45px;
   text-align: center;
-  background: #1abc9c;
-  color: white;
   font-size: 30px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.control-image {
+  vertical-align: middle;
+  display: flex;
+  flex-direction: row;
+}
+
+.register {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.play {
+  display: flex;
+  justify-content: center;
+}
+
+.playButton:hover {
+  filter: brightness(1.45)
 }

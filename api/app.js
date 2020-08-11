@@ -148,6 +148,9 @@ socket.on('reset', function (resetPlayerData) {
 });
 });
 
+if (PORT == null || PORT == "") {
+  port = 8081
+}
 server.listen(PORT, function () {
-  console.log(`game app listening on port ${PORT}`);
+  console.log(`game app listening on ${PORT}`);
 });

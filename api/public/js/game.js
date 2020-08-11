@@ -11,8 +11,8 @@ var config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
-      debugShowBody: true
+      debug: false,
+      debugShowBody: false
     }
   },
   scene: {
@@ -632,7 +632,6 @@ function replaceAmmo(self, playerInfo, ammoAmmount) {
   if (ammoAmmount < 10) {
     ammoCrate.setScale(0.5);
   }
-  //self.socket.emit('addNewAmmo', { x: playerInfo.x, y: playerInfo.y, Id: playerInfo.Id });
 }
 
 function addAmmo(self, playerInfo, ammoAmmount) {

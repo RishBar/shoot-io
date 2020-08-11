@@ -49,7 +49,7 @@ app.post('/login', (req, res) => {
         req.session.userId = user.id;
         console.log(`you have successfully logged in as ${user.username}`);
         playerName = user.username
-        res.send("LOGGED IN! CLICK THE 'GO TO GAME BUTTON'");
+        res.send("LOGGED IN! CLICK THE 'PLAY' BUTTON");
       } else {
         res.send("Username or password doesn't exist")
       }

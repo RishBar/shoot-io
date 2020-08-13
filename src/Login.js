@@ -2,7 +2,6 @@ import React from 'react';
 import './Login.css';
 import { useState, useEffect } from "react";
 import axios from "axios";
-const users_model = require('./users_model')
 
 function Login() {
   const [state, setState] = useState({username: "", password: "", error: ""})
@@ -25,8 +24,6 @@ function Login() {
       });
   };
   
-  const user = users_model.getUserWithUsername(username)
-  if (!user) {
     return (
       <div className="flex">
         <h1>LOGIN</h1>
@@ -56,15 +53,6 @@ function Login() {
         <p className="error">{state.error}</p>
       </div>
     );
-  } else {
-    return (
-      <div className="loggedIn">
-        <h1>LOGGED IN AS {state.username}</h1>
-		<a href="https://shoot-io.herokuapp.com/" className="logout">LOGOUT</a>
-        <p className="error">{state.error}</p>
-      </div>
-    );  
-  }
 }
 
 export default Login;

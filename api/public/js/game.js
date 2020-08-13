@@ -381,6 +381,8 @@ function create() {
     this.socket.emit('reset', {x: newPlayerX, y: newPlayerY, playerId: self.ship.playerId});
     this.resetButton.setVisible(false);
     this.resetButton.setInteractive(false);
+	this.menuButton.setVisible(false);
+    this.menuButton.setInteractive(false);
   });
   
   this.menuButton.on('pointerover', () => {

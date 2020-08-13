@@ -29,6 +29,15 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
  
+app.get('/', function (req, res) {
+  const cookieId = req.session.userId
+  if (cookieId) {
+    res.send("LOGIN FIRST")
+  } else {
+    res.sendFile(__dirname + '/index.html');
+  }
+});
+ 
 app.get('/index', function (req, res) {
   const cookieId = req.session.userId
   if (!cookieId) {

@@ -2,6 +2,7 @@ import React from 'react';
 import './Login.css';
 import { useState, useEffect } from "react";
 import axios from "axios";
+const users_model = require('./users_model')
 
 function Login() {
   const [state, setState] = useState({username: "", password: "", error: ""})
@@ -10,6 +11,7 @@ function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
+	const loggedIn = false;
     const { username, password } = state
       axios.post('/login', {
         username,
@@ -23,7 +25,8 @@ function Login() {
       });
   };
   
-  if (state.username === "") {
+  const user = users_model.getUserWithUsername(username)
+  if (!user) {
     return (
       <div className="flex">
         <h1>LOGIN</h1>

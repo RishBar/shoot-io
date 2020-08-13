@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function Login() {
+  let loggedIn = false;
   const [state, setState] = useState({username: "", password: "", error: ""})
   const setPassword = password => setState((prevState) => ({ ...prevState, password }));
   const setUserName = username => setState((prevState) => ({ ...prevState, username }));
 
   function handleSubmit(event) {
     event.preventDefault();
-	const loggedIn = false;
     const { username, password } = state
       axios.post('/login', {
         username,
@@ -24,6 +24,7 @@ function Login() {
       });
   };
   
+  if (!loggedIn){
     return (
       <div className="flex">
         <h1>LOGIN</h1>
@@ -48,11 +49,20 @@ function Login() {
             required
           />
 
-          <button type="submit">Login</button>
+          <button type="submit" onClick={loggedIn=true}>Login</button>
         </form>
         <p className="error">{state.error}</p>
       </div>
     );
+  } else {
+	return (
+      <div className="loggedIn">
+        <h1>LOGGED IN AS {state.username}</h1>
+		<a href="https://shoot-io.herokuapp.com/" className="logout">LOGOUT</a>
+        <p className="error">{state.error}</p>
+      </div>
+    ); 
+  }
 }
 
 export default Login;

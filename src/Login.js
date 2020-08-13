@@ -23,7 +23,7 @@ function Login() {
       });
   };
   
-  if (state.username !== "") {
+  if (state.username === "") {
     return (
       <div className="flex">
         <h1>LOGIN</h1>

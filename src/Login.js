@@ -24,7 +24,7 @@ function Login() {
       });
   };
   
-  if (state.username === ""){
+  if (!loggedIn){
     return (
       <div className="flex">
         <h1>LOGIN</h1>
@@ -49,7 +49,7 @@ function Login() {
             required
           />
 
-          <button type="submit">Login</button>
+          <button type="submit" onClick={loggedIn=true}>Login</button>
         </form>
         <p className="error">{state.error}</p>
       </div>

@@ -7,7 +7,7 @@
 var config = {
   type: Phaser.AUTO,
   width: 1024,
-  height: 720,
+  height: 865,
   physics: {
     default: "arcade",
     arcade: {
@@ -39,6 +39,7 @@ var healthScore;
 var gameOverText;
 var scoreText;
 var resetButton;
+var menuButton;
 
 let strafeLeft = true;
 let strafeRight = true;
@@ -75,14 +76,21 @@ function preload() {
   this.load.image('wallCollision15', '../assets/wall_collision15.png')
   this.load.image('border', '../assets/border.png')
   this.load.image('border2', '../assets/border2.png')
+  this.load.image('menu', '../assets/menu.png')
+  this.load.image('menuHovered', '../assets/menu_hovered.png')
+  this.load.image('menuPressed', '../assets/menu_pressed.png')
+  this.load.image('prop', '../assets/prop.png')
 };
 
 
 function create() {
   game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
   this.cameras.main.setBounds(0, 0, 1506, 1506);
+  console.log(game);
   const background = this.add.image(750, 750, 'background')
   background.depth = 0;
+  
+  this.input.setPollAlways();
 
   const wall = this.physics.add.image(750, 750, 'wall')
   const train = this.physics.add.image(80, 120, 'train')
@@ -120,6 +128,9 @@ function create() {
   const border2 = this.physics.add.image(750, 0, 'border')
   const border3 = this.physics.add.image(1506, 750, 'border2')
   const border4 = this.physics.add.image(0, 750, 'border2')
+  const prop = this.physics.add.image(510, 1340, 'prop')
+  const prop2 = this.physics.add.image(670, 1340, 'prop')
+  const prop3 = this.physics.add.image(350, 1340, 'prop')
   var self = this;
   this.active = true;
   this.socket = io();
@@ -163,6 +174,9 @@ function create() {
   this.obstacleGroup.add(border2)
   this.obstacleGroup.add(border3)
   this.obstacleGroup.add(border4)
+  this.obstacleGroup.add(prop)
+  this.obstacleGroup.add(prop2)
+  this.obstacleGroup.add(prop3)
   desk1.setScale(0.6);
   desk1.setImmovable();
   desk2.setScale(0.6);
@@ -208,6 +222,9 @@ function create() {
   border4.setImmovable();
   train.setImmovable();
   train.setVisible(false);
+  prop.setImmovable();
+  prop2.setImmovable();
+  prop3.setImmovable();
   this.socket.on('currentPlayers', function (players) {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
@@ -242,6 +259,7 @@ function create() {
     self.bullets.getChildren().forEach(function (bullet) {
       if (bullet.bulletId === playerInfo.bulletId) {
         bullet.destroy();
+        console.log(self.ship.playerId, playerInfo.playerId);
         if (playerInfo.playerId === self.ship.playerId) {
           if (self.ship.health - 10 <= 0) {
             self.ship.health -= 10;
@@ -249,6 +267,8 @@ function create() {
             gameOverText.setText("GAME OVER!!")
             self.resetButton.setInteractive();
             self.resetButton.setVisible(true);
+			self.menuButton.setInteractive();
+            self.menuButton.setVisible(true);
             self.active = false;
             self.ship.setVisible(false);
           } else {
@@ -280,6 +300,8 @@ function create() {
   });
   this.socket.on('ammoIsCollected', function(playerInfo) {
     self.ammoGroup.getChildren().forEach(function (ammo) {
+      console.log(ammo.ammoId)
+      console.log(playerInfo)
       if (playerInfo.ammoId === ammo.ammoId) {
         ammo.destroy();
         if (ammo.ammoId === 1){
@@ -304,6 +326,8 @@ function create() {
     })
   });
   this.socket.on('resetPlayer', function(playerInfo) {
+    console.log(playerInfo.playerId)
+    console.log("reset");
     addOtherPlayers(self, playerInfo);
   });
   gameOverText = this.add.text(190, 310, '', { fontSize: '100px', fill: '#FFFFFF' })
@@ -322,8 +346,14 @@ function create() {
   scoreText.scrollFactorX = 0
   scoreText.scrollFactorY = 0
   scoreText.depth = 100;
+  
+  this.menuButton = this.add.image(520, 620, 'menu')
+  this.menuButton.scrollFactorX = 0
+  this.menuButton.scrollFactorY = 0
+  this.menuButton.depth = 100
+  this.menuButton.setVisible(false);
 
-  this.resetButton = this.add.image(520, 510, 'reset')
+  this.resetButton = this.add.image(520, 480, 'reset')
   this.resetButton.scrollFactorX = 0
   this.resetButton.scrollFactorY = 0
   this.resetButton.depth = 100
@@ -343,14 +373,38 @@ function create() {
     var newPlayerY = Math.floor(Math.random() * 700) + 50;
     resetPlayer(self, {x: newPlayerX, y: newPlayerY});
     this.active = true;
-    healthScore.setText("Health: 100");
-    gameOverText.setText("");
-    ammoText.setText("Ammo: 20");
-    scoreText.setText("Score: 0");
+    healthScore.setText('Health: 100');
+    gameOverText.setText('');
+    ammoText.setText('Ammo: 20');
+    scoreText.setText('Score: 0');
     teleport = true;
     this.socket.emit('reset', {x: newPlayerX, y: newPlayerY, playerId: self.ship.playerId});
     this.resetButton.setVisible(false);
     this.resetButton.setInteractive(false);
+  });
+  
+  this.menuButton.on('pointerover', () => {
+  this.menuButton.setTexture('menuHovered')
+})
+  this.menuButton.on('pointerout', () => {
+  this.menuButton.setTexture('menu')
+})
+  this.menuButton.on('pointerdown', () => {
+  this.menuButton.setTexture('menuPressed')
+  });
+  this.menuButton.on('pointerup', () => {
+	var url = 'https://shoot-io.herokuapp.com/';
+
+    var s = window.open(url, '_self');
+
+    if (s && s.focus)
+    {
+        s.focus();
+    }
+    else if (!s)
+    {
+        window.location.href = url;
+    }
   });
   
   this.input.on('pointerdown', addBullet, this)
@@ -370,6 +424,8 @@ function create() {
 
 function resetPlayerLocation () {
   if (teleport === true) {
+    console.log("player collided");
+    console.log(teleport)
     this.ship.x = Math.floor(Math.random() * 700) + 50;
     this.ship.y = Math.floor(Math.random() * 700) + 50;
   }
@@ -377,6 +433,8 @@ function resetPlayerLocation () {
 
 function pickDifferentLocation (ammo) {
   if (ammo.ammoId === 1) {
+    console.log("ammo has been collided")
+    console.log(ammo)
     ammo.destroy();
     var newX;
     var newY;
@@ -401,6 +459,8 @@ function hitWall (bullet) {
 function collectAmmo(player, ammo) {
   if (this.active === true) {
     var self = this;
+    console.log(ammo.ammoId);
+    console.log(ammo.count);
     this.ship.ammoCount += ammo.count;
     ammoText.setText(`Ammo: ${this.ship.ammoCount}`);
     var newX = Math.floor(Math.random() * 700) + 50;
@@ -419,6 +479,7 @@ function hitPlayer(player, bullet) {
   if (bullet.playerId !== player.id) {
     this.socket.emit('bulletHit', { playerId: player.playerId, player: player, bullet: bullet, bulletId: bullet.bulletId });
     bullet.destroy();
+    console.log(player.health);
     if (player.health - 10 <= 0) {
       this.ship.score += 50;
       scoreText.setText(`Score: ${this.ship.score}`)
@@ -477,6 +538,25 @@ function update() {
         velocityFromRotation(this.ship.rotation, SPEED, this.ship.body.velocity);
       }
     }
+	    if (backKey.isDown){
+      if (teleport === true) {
+        teleport = false;
+      }
+      if (sprintKey.isDown) {
+        if (this.ship.rotation < 0){
+          velocityFromRotation(this.ship.rotation + Math.PI, SPEED+250, this.ship.body.velocity);
+        } else {
+          velocityFromRotation(this.ship.rotation - Math.PI, SPEED+250, this.ship.body.velocity); 
+        }
+      } 
+      else {
+        if (this.ship.rotation < 0){
+          velocityFromRotation(this.ship.rotation + Math.PI, SPEED+50, this.ship.body.velocity);
+        } else {
+          velocityFromRotation(this.ship.rotation - Math.PI, SPEED+50, this.ship.body.velocity); 
+        }
+      }
+    }
     if (leftKey.isDown){
       if (teleport === true) {
         teleport = false;
@@ -523,25 +603,6 @@ function update() {
     }
     if (!rightKey.isDown) {
       strafeRight = true;
-    }
-    if (backKey.isDown){
-      if (teleport === true) {
-        teleport = false;
-      }
-      if (sprintKey.isDown) {
-        if (this.ship.rotation < 0){
-          velocityFromRotation(this.ship.rotation + Math.PI, SPEED+250, this.ship.body.velocity);
-        } else {
-          velocityFromRotation(this.ship.rotation - Math.PI, SPEED+250, this.ship.body.velocity); 
-        }
-      } 
-      else {
-        if (this.ship.rotation < 0){
-          velocityFromRotation(this.ship.rotation + Math.PI, SPEED+50, this.ship.body.velocity);
-        } else {
-          velocityFromRotation(this.ship.rotation - Math.PI, SPEED+50, this.ship.body.velocity); 
-        }
-      }
     }
     this.ship.body.debugBodyColor = (this.ship.body.angularVelocity === 0) ? 0xff0000 : 0xffff00;
     // emit player movement
@@ -628,10 +689,13 @@ function replaceAmmo(self, playerInfo, ammoAmmount) {
   ammoCrate.x = playerInfo.x
   ammoCrate.y = playerInfo.y
   ammoCrate.count = ammoAmmount;
+  console.log(playerInfo.x)
+  console.log(playerInfo.y)
   self.ammoGroup.add(ammoCrate)
   if (ammoAmmount < 10) {
     ammoCrate.setScale(0.5);
   }
+  //self.socket.emit('addNewAmmo', { x: playerInfo.x, y: playerInfo.y, Id: playerInfo.Id });
 }
 
 function addAmmo(self, playerInfo, ammoAmmount) {

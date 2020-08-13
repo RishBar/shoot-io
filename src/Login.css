@@ -19,3 +19,15 @@ input {
 .error {
   color: red;
 }
+
+.loggedIn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.logout {
+  color: red;
+  text-decoration: underline;
+}

@@ -26,7 +26,6 @@ function App() {
         < Registration />
         < Login />
       </div>
-      {/* <button type="button"><a href="/index">Go to the game!</a></button> */}
       <form action="/index" className = "play">
         <input type="image"  className = "playButton" src={playButton} width='90' height='90' onClick="submit" />
       </form>

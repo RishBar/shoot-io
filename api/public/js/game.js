@@ -506,7 +506,7 @@ function addBullet(pointer) {
   if (this.ship && this.active === true) {
     if (this.ship.ammoCount > 0) {
       const bullet = this.physics.add.sprite(this.ship.x, this.ship.y, "bullet")
-      bullet.depth = 0;
+      bullet.depth = 2;
       bullet.setScale(0.3)
       bullet.bulletId = Math.floor(Math.random() * 100000)
       bullet.playerId = this.ship.playerId
@@ -684,7 +684,7 @@ function replaceAmmo(self, playerInfo, ammoAmmount) {
     ammoString = 'largerAmmo'
   }
   const ammoCrate = self.add.image(playerInfo.x, playerInfo.y, ammoString)
-  ammoCrate.depth = 30;
+  ammoCrate.depth = 1;
   ammoCrate.ammoId = playerInfo.Id
   ammoCrate.x = playerInfo.x
   ammoCrate.y = playerInfo.y
@@ -704,7 +704,7 @@ function addAmmo(self, playerInfo, ammoAmmount) {
     ammoString = 'largerAmmo'
   }
   const ammoCrate = self.add.image(playerInfo.x, playerInfo.y, ammoString)
-  ammoCrate.depth = 30;
+  ammoCrate.depth = 1;
   ammoCrate.ammoId = playerInfo.Id
   ammoCrate.x = playerInfo.x
   ammoCrate.y = playerInfo.y

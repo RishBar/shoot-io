@@ -4,6 +4,7 @@ import './App.css';
 import logo from './logo.png'
 import wasd from './WASD.png'
 import mouse from './mouse.png'
+import shift from './SHIFT.png'
 import playButton from './playButton.png'
 import Registration from "./Registration";
 import Login from "./Login";
@@ -18,6 +19,7 @@ function App() {
         <h2>Controls:</h2> 
         <div className = "controls">
         <div className = "control-image"><img src={wasd} alt='WASD' width='154' height='100'/><p> - Movement</p></div>
+		<div className = "control-image"><img src={shift} alt='SPRINT' width='194' height='100'/><p> - Sprint</p></div>
         <div className = "control-image"><img src={mouse} alt='MOUSE' width='140' height='140'/><p> - Directional Movement and Shooting</p></div>
         </div>
         <p>Objective: Shoot Anything That Moves</p>
